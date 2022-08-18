@@ -5,6 +5,7 @@ import { PrismaChallengeRepository } from '@infra/database/prisma/repositories/p
 import { ChallengeRepository } from '@infra/database/repositories/challenge.repository';
 
 import { CreateChallengeUseCase } from './use-cases/challenges/create-challenge-use-case';
+import { EditChallengeUseCase } from './use-cases/challenges/edit-challenge-use-case';
 
 @Module({
   imports: [DatabaseModule],
@@ -14,7 +15,8 @@ import { CreateChallengeUseCase } from './use-cases/challenges/create-challenge-
       useClass: PrismaChallengeRepository,
     },
     CreateChallengeUseCase,
+    EditChallengeUseCase,
   ],
-  exports: [CreateChallengeUseCase],
+  exports: [CreateChallengeUseCase, EditChallengeUseCase],
 })
 export class UseCasesModule {}

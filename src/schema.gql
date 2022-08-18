@@ -20,9 +20,16 @@ type Query {
 
 type Mutation {
   createChallenge(data: CreateChallengeInput!): Challenge!
+  editChallenge(data: EditChallengeInput!): Challenge!
 }
 
 input CreateChallengeInput {
   title: String!
   description: String!
+}
+
+input EditChallengeInput {
+  id: ID!
+  title: String
+  description: String
 }
