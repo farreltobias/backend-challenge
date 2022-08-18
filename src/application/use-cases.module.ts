@@ -6,6 +6,7 @@ import { ChallengeRepository } from '@infra/database/repositories/challenge.repo
 
 import { CreateChallengeUseCase } from './use-cases/challenges/create-challenge-use-case';
 import { EditChallengeUseCase } from './use-cases/challenges/edit-challenge-use-case';
+import { PageChallengesUseCase } from './use-cases/challenges/page-challenges-use-case';
 import { RemoveChallengeUseCase } from './use-cases/challenges/remove-challenge-use-case';
 
 @Module({
@@ -18,11 +19,13 @@ import { RemoveChallengeUseCase } from './use-cases/challenges/remove-challenge-
     CreateChallengeUseCase,
     EditChallengeUseCase,
     RemoveChallengeUseCase,
+    PageChallengesUseCase,
   ],
   exports: [
     CreateChallengeUseCase,
     EditChallengeUseCase,
     RemoveChallengeUseCase,
+    PageChallengesUseCase,
   ],
 })
 export class UseCasesModule {}

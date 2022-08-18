@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
+import { AsyncMaybe } from '@core/logic/Maybe';
+
 import { Challenge } from '@domain/entities/challenge';
 
 import {
   ChallengeRepository,
   ChallengeRequest,
+  FilterChallenges,
+  PageChallenges,
   UpdateChallengeRequest,
 } from '@infra/database/repositories/challenge.repository';
 
@@ -54,5 +58,45 @@ export class PrismaChallengeRepository implements ChallengeRepository {
     });
 
     return ChallengeMapper.toEntity(challenge);
+  }
+
+  async pageChallenges({
+    filter,
+    limit,
+    offset,
+  }: PageChallenges): AsyncMaybe<Challenge[]> {
+    const challenges = await this.prisma.challenge.findMany({
+      where: {
+        title: {
+          contains: filter.title,
+          mode: 'insensitive',
+        },
+        description: {
+          contains: filter.description,
+          mode: 'insensitive',
+        },
+      },
+      take: limit,
+      skip: offset,
+    });
+
+    if (!challenges.length) return null;
+
+    return challenges.map(ChallengeMapper.toEntity);
+  }
+
+  countChallenges(filter: FilterChallenges): Promise<number> {
+    return this.prisma.challenge.count({
+      where: {
+        title: {
+          contains: filter.title,
+          mode: 'insensitive',
+        },
+        description: {
+          contains: filter.description,
+          mode: 'insensitive',
+        },
+      },
+    });
   }
 }

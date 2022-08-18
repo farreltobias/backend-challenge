@@ -14,8 +14,18 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ChallengePager {
+  nodes: [Challenge!]
+  totalCount: Int!
+}
+
 type Query {
-  sayHello: String!
+  challenges(offset: Int = 0, limit: Int = 10, filter: PageChallengeFilter): ChallengePager!
+}
+
+input PageChallengeFilter {
+  title: String
+  description: String
 }
 
 type Mutation {

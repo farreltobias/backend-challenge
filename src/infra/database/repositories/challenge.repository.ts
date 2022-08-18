@@ -13,8 +13,17 @@ export type UpdateChallengeRequest = {
   id: string;
 } & FilterChallenges;
 
+export type PageChallenges = {
+  filter: FilterChallenges;
+  offset: number;
+  limit: number;
+};
+
 @Injectable()
 export abstract class ChallengeRepository {
+  abstract countChallenges(filter: FilterChallenges): Promise<number>;
+  abstract pageChallenges(filter: PageChallenges): AsyncMaybe<Challenge[]>;
+
   abstract createChallenge(challenge: ChallengeRequest): Promise<Challenge>;
   abstract updateChallenge(
     challenge: UpdateChallengeRequest,
