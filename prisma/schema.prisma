@@ -8,9 +8,14 @@ generator client {
   binaryTargets = ["native", "linux-musl"]
 }
 
-model Example {
-  id String @id
+model Challenge {
+  id String @id @default(uuid())
 
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  title       String
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("challenge")
 }
