@@ -28,7 +28,7 @@ async function bootstrap() {
   app.useLogger(LoggerServiceInstance);
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
   app.useGlobalPipes(new ValidationPipe());
-  
+
   app.enableShutdownHooks();
 
   app.listen(3333).then(() => {

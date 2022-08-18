@@ -1,8 +1,10 @@
 import { Type } from '@nestjs/common';
 import { Field, ObjectType, Int } from '@nestjs/graphql';
 
+import { Maybe } from '@core/logic/Maybe';
+
 export interface PaginatedType<T> {
-  nodes: T[];
+  nodes: Maybe<T[]>;
   totalCount: number;
 }
 
