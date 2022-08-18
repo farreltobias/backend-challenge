@@ -45,4 +45,14 @@ export class PrismaChallengeRepository implements ChallengeRepository {
 
     return ChallengeMapper.toEntity(instance);
   }
+
+  async deleteChallenge(id: string): Promise<Challenge> {
+    const challenge = await this.prisma.challenge.delete({
+      where: {
+        id,
+      },
+    });
+
+    return ChallengeMapper.toEntity(challenge);
+  }
 }

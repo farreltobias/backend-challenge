@@ -20,5 +20,6 @@ export abstract class ChallengeRepository {
     challenge: UpdateChallengeRequest,
   ): Promise<Challenge>;
 
+  abstract deleteChallenge(id: string): Promise<Challenge>;
   abstract getChallengeById(id: string): AsyncMaybe<Challenge>;
 }

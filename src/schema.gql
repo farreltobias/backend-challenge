@@ -21,6 +21,7 @@ type Query {
 type Mutation {
   createChallenge(data: CreateChallengeInput!): Challenge!
   editChallenge(data: EditChallengeInput!): Challenge!
+  removeChallenge(data: RemoveChallengeInput!): Challenge!
 }
 
 input CreateChallengeInput {
@@ -32,4 +33,8 @@ input EditChallengeInput {
   id: ID!
   title: String
   description: String
+}
+
+input RemoveChallengeInput {
+  id: ID!
 }
