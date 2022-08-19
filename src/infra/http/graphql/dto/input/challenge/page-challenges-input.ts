@@ -1,6 +1,6 @@
 import { ArgsType, Field, InputType } from '@nestjs/graphql';
 
-import { PaginationArgs } from '../../common/dto/args/pagination-args';
+import { PaginationArgs } from '../../../common/dto/args/pagination-args';
 
 @InputType()
 class PageChallengeFilter {
