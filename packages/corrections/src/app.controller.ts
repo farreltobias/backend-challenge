@@ -12,7 +12,7 @@ interface CorrectLessonResponse {
   submissionId: string;
   repositoryUrl: string;
   grade: number;
-  status: 'Pending' | 'Error' | 'Done';
+  status: 'PENDING' | 'ERROR' | 'DONE';
 }
 
 @Controller()
@@ -27,7 +27,7 @@ export class AppController {
       submissionId,
       repositoryUrl,
       grade: Math.floor(Math.random() * 10) + 1,
-      status: 'Done',
+      status: 'DONE',
     };
   }
 }
