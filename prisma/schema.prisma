@@ -17,5 +17,29 @@ model Challenge {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  Submission Submission[]
+
   @@map("challenge")
+}
+
+enum SubmissionStatus {
+  PENDING
+  ERROR
+  DONE
+}
+
+model Submission {
+  id String @id @default(uuid())
+
+  challengeId   String
+  repositoryUrl String
+  status        SubmissionStatus @default(PENDING)
+  grade         Int              @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("submission")
 }
