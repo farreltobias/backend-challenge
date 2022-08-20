@@ -5,12 +5,12 @@ import { EditChallengeUseCase } from '@application/use-cases/challenges/edit-cha
 import { PageChallengesUseCase } from '@application/use-cases/challenges/page-challenges-use-case';
 import { RemoveChallengeUseCase } from '@application/use-cases/challenges/remove-challenge-use-case';
 
-import { CreateChallengeInput } from '../dto/input/create-challenge-input';
-import { EditChallengeInput } from '../dto/input/edit-challenge-input';
-import { PageChallengeInput } from '../dto/input/page-challenges-input';
-import { RemoveChallengeInput } from '../dto/input/remove-challenge-input';
+import { CreateChallengeInput } from '../dto/input/challenge/create-challenge-input';
+import { EditChallengeInput } from '../dto/input/challenge/edit-challenge-input';
+import { PageChallengeInput } from '../dto/input/challenge/page-challenges-input';
+import { RemoveChallengeInput } from '../dto/input/challenge/remove-challenge-input';
 import { Challenge } from '../dto/models/challenge';
-import { ChallengePager } from '../dto/output/page-challenges-output';
+import { ChallengePager } from '../dto/output/challenges/page-challenges-output';
 import { ChallengeViewModel } from '../view-models/challenge.view-model';
 
 @Resolver(() => String)

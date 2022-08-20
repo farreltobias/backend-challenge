@@ -2,6 +2,7 @@
   "conventionalCommits.scopes": [
     "corrections",
     "challenge",
-    "messaging"
+    "messaging",
+    "submission"
   ]
 }

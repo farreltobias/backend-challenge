@@ -19,8 +19,28 @@ type ChallengePager {
   totalCount: Int!
 }
 
+type Submission {
+  id: ID!
+  challengeId: ID!
+  repositoryUrl: URL!
+  status: SubmissonStatus!
+  grade: Float!
+  createdAt: DateTime!
+}
+
+"""URL custom scalar type, validates input as a valid URL."""
+scalar URL
+
+"""Available submisson statuses"""
+enum SubmissonStatus {
+  PENDING
+  ERROR
+  DONE
+}
+
 type Query {
   challenges(offset: Int = 0, limit: Int = 10, filter: PageChallengeFilter): ChallengePager!
+  submissions: [Submission!]!
 }
 
 input PageChallengeFilter {
@@ -32,6 +52,7 @@ type Mutation {
   createChallenge(data: CreateChallengeInput!): Challenge!
   editChallenge(data: EditChallengeInput!): Challenge!
   removeChallenge(data: RemoveChallengeInput!): Challenge!
+  createSubmission(data: CreateSubmissionInput!): Submission!
 }
 
 input CreateChallengeInput {
@@ -47,4 +68,9 @@ input EditChallengeInput {
 
 input RemoveChallengeInput {
   id: ID!
+}
+
+input CreateSubmissionInput {
+  challengeId: ID!
+  repositoryUrl: URL!
 }

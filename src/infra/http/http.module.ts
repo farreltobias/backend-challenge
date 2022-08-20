@@ -3,10 +3,12 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import path from 'node:path';
 
-import { UseCasesModule } from '@application/use-cases.module';
+import { UseCasesModule } from '@application/use-cases/use-cases.module';
 
 import { ComplexityPlugin } from '@infra/http/graphql/complexity-plugin';
+import { URL } from '@infra/http/graphql/dto/scalers/url.scaler';
 import { ChallengeResolver } from '@infra/http/graphql/resolvers/challenge.resolver';
+import { SubmissionResolver } from '@infra/http/graphql/resolvers/submission.resolver';
 
 @Module({
   imports: [
@@ -15,8 +17,11 @@ import { ChallengeResolver } from '@infra/http/graphql/resolvers/challenge.resol
       driver: ApolloDriver,
       autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
       plugins: [new ComplexityPlugin(20)],
+      resolvers: {
+        URL,
+      },
     }),
   ],
-  providers: [ChallengeResolver],
+  providers: [ChallengeResolver, SubmissionResolver],
 })
 export class HttpModule {}
