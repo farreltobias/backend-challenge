@@ -9,8 +9,8 @@ export class Submission {
   @Field((_type) => ID)
   id: string;
 
-  @Field((_type) => ID)
-  challengeId: string;
+  @Field((_type) => ID, { nullable: true })
+  challengeId: string | null;
 
   @Field((_type) => URL)
   repositoryUrl: string;

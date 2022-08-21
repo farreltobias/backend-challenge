@@ -7,7 +7,7 @@ export class SubmissionViewModel {
   static toGraphql(submission: SubmissionEntity): Submission {
     return {
       id: submission.id,
-      challengeId: submission.challengeId,
+      challengeId: submission.challengeId ?? null,
       repositoryUrl: submission.repositoryUrl,
       status: SubmissionStatus[submission.status],
       grade: submission.grade,

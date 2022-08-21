@@ -5,7 +5,7 @@ import { SubmissionRequest } from '@infra/database/repositories/submission.repos
 export type SubmissionStatus = 'PENDING' | 'ERROR' | 'DONE';
 
 export interface SubmissionProps {
-  challengeId: string;
+  challengeId: string | null;
   repositoryUrl: string;
   status: SubmissionStatus;
   grade: number;

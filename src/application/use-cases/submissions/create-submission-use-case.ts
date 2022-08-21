@@ -5,10 +5,7 @@ import { UseCaseError } from '@application/errors/use-case-error';
 import { Submission } from '@domain/entities/submission';
 
 import { ChallengeRepository } from '@infra/database/repositories/challenge.repository';
-import {
-  SubmissionRepository,
-  SubmissionRequest,
-} from '@infra/database/repositories/submission.repository';
+import { SubmissionRepository } from '@infra/database/repositories/submission.repository';
 import { KafkaService } from '@infra/messaging/kafka.service';
 
 interface CorrectLessonMessage {
@@ -23,7 +20,10 @@ interface CorrectLessonResponse {
   status: 'PENDING' | 'ERROR' | 'DONE';
 }
 
-type CreateChallengeRequest = Omit<SubmissionRequest, 'status' | 'grade'>;
+type CreateChallengeRequest = {
+  challengeId: string;
+  repositoryUrl: string;
+};
 
 @Injectable()
 export class CreateSubmissionUseCase {
@@ -41,6 +41,7 @@ export class CreateSubmissionUseCase {
     if (!challenge) {
       await this.submissionRepository.createSubmission({
         ...data,
+        challengeId: null,
         status: 'ERROR',
       });
 

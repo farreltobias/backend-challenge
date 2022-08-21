@@ -2,7 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { UseCaseError } from '@application/errors/use-case-error';
 import { CreateSubmissionUseCase } from '@application/use-cases/submissions/create-submission-use-case';
-import { PageSubmissionsUseCase } from '@application/use-cases/submissions/page-submission-use-case';
+import { PageSubmissionsUseCase } from '@application/use-cases/submissions/page-submissions-use-case';
 
 import { CreateSubmissionInput } from '../dto/input/submission/create-submission-input';
 import { PageSubmissionInput } from '../dto/input/submission/page-submission-input';

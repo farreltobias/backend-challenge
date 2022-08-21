@@ -24,7 +24,7 @@ export class SubmissionMapper {
   static toInstance(entity: SubmissionEntity): Submission {
     return {
       id: entity.id,
-      challengeId: entity.challengeId,
+      challengeId: entity.challengeId ?? null,
       repositoryUrl: entity.repositoryUrl,
       status: entity.status,
       grade: entity.grade,

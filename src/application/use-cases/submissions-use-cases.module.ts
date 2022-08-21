@@ -8,7 +8,7 @@ import { SubmissionRepository } from '@infra/database/repositories/submission.re
 import { MessagingModule } from '@infra/messaging/messaging.module';
 
 import { CreateSubmissionUseCase } from './submissions/create-submission-use-case';
-import { PageSubmissionsUseCase } from './submissions/page-submission-use-case';
+import { PageSubmissionsUseCase } from './submissions/page-submissions-use-case';
 
 @Module({
   imports: [DatabaseModule, MessagingModule],

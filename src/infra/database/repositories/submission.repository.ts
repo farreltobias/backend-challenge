@@ -15,7 +15,7 @@ export type SubmissionRequest = Omit<
 >;
 
 export type CreateSubmissions = {
-  challengeId: string;
+  challengeId: string | null;
   repositoryUrl: string;
   status?: SubmissionStatus;
 };
