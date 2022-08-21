@@ -6,7 +6,7 @@ import path from 'node:path';
 import { UseCasesModule } from '@application/use-cases/use-cases.module';
 
 import { ComplexityPlugin } from '@infra/http/graphql/complexity-plugin';
-import { URL } from '@infra/http/graphql/dto/scalers/url.scaler';
+import { URL } from '@infra/http/graphql/dto/scalars/url';
 import { ChallengeResolver } from '@infra/http/graphql/resolvers/challenge.resolver';
 import { SubmissionResolver } from '@infra/http/graphql/resolvers/submission.resolver';
 

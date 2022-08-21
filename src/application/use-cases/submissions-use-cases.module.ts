@@ -8,6 +8,7 @@ import { SubmissionRepository } from '@infra/database/repositories/submission.re
 import { MessagingModule } from '@infra/messaging/messaging.module';
 
 import { CreateSubmissionUseCase } from './submissions/create-submission-use-case';
+import { PageSubmissionsUseCase } from './submissions/page-submission-use-case';
 
 @Module({
   imports: [DatabaseModule, MessagingModule],
@@ -21,7 +22,8 @@ import { CreateSubmissionUseCase } from './submissions/create-submission-use-cas
       useClass: PrismaSubmissionRepository,
     },
     CreateSubmissionUseCase,
+    PageSubmissionsUseCase,
   ],
-  exports: [CreateSubmissionUseCase],
+  exports: [CreateSubmissionUseCase, PageSubmissionsUseCase],
 })
 export class SubmissionsUseCasesModule {}

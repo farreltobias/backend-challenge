@@ -1,18 +1,8 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Max, Min } from 'class-validator';
 
-import { URL } from '../scalers/url.scaler';
-
-enum SubmissonStatus {
-  PENDING = 'PENDING',
-  ERROR = 'ERROR',
-  DONE = 'DONE',
-}
-
-registerEnumType(SubmissonStatus, {
-  name: 'SubmissonStatus',
-  description: 'Available submisson statuses',
-});
+import { SubmissionStatus } from '../enum/submission-status';
+import { URL } from '../scalars/url';
 
 @ObjectType()
 export class Submission {
@@ -25,8 +15,8 @@ export class Submission {
   @Field((_type) => URL)
   repositoryUrl: string;
 
-  @Field((_type) => SubmissonStatus)
-  status: SubmissonStatus;
+  @Field((_type) => SubmissionStatus)
+  status: SubmissionStatus;
 
   @Field()
   @Min(0)

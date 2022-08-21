@@ -10,7 +10,7 @@ import { EditChallengeInput } from '../dto/input/challenge/edit-challenge-input'
 import { PageChallengeInput } from '../dto/input/challenge/page-challenges-input';
 import { RemoveChallengeInput } from '../dto/input/challenge/remove-challenge-input';
 import { Challenge } from '../dto/models/challenge';
-import { ChallengePager } from '../dto/output/challenges/page-challenges-output';
+import { ChallengePager } from '../dto/output/challenge/page-challenges-output';
 import { ChallengeViewModel } from '../view-models/challenge.view-model';
 
 @Resolver(() => String)

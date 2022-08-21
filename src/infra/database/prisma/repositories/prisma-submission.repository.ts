@@ -60,8 +60,11 @@ export class PrismaSubmissionRepository implements SubmissionRepository {
     const submissions = await this.prisma.submission.findMany({
       where: {
         challengeId: filter.challengeId,
-        grade: filter.grade,
         status: filter.status,
+        createdAt: {
+          gte: filter.fromDate,
+          lte: filter.toDate,
+        },
       },
       take: limit,
       skip: offset,
@@ -76,8 +79,11 @@ export class PrismaSubmissionRepository implements SubmissionRepository {
     return this.prisma.submission.count({
       where: {
         challengeId: filter.challengeId,
-        grade: filter.grade,
         status: filter.status,
+        createdAt: {
+          gte: filter.fromDate,
+          lte: filter.toDate,
+        },
       },
     });
   }

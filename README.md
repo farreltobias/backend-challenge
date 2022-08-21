@@ -76,10 +76,10 @@ Neste projeto, está incluído o **[corrections](packages/corrections) (serviço
 
 **Operações necessárias**
 
-- [ ] Enviar
-- [ ] Listar
-  - [ ] Filtros: desafio, intervalo de datas, status
-  - [ ] Paginação
+- [x] Enviar
+- [x] Listar
+  - [x] Filtros: desafio, intervalo de datas, status
+  - [x] Paginação
 
 ## ✔️ Critérios de Avaliação
 

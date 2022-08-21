@@ -23,7 +23,7 @@ type Submission {
   id: ID!
   challengeId: ID!
   repositoryUrl: URL!
-  status: SubmissonStatus!
+  status: SubmissionStatus!
   grade: Float!
   createdAt: DateTime!
 }
@@ -32,20 +32,32 @@ type Submission {
 scalar URL
 
 """Available submisson statuses"""
-enum SubmissonStatus {
+enum SubmissionStatus {
   PENDING
   ERROR
   DONE
 }
 
+type SubmissionPager {
+  nodes: [Submission!]
+  totalCount: Int!
+}
+
 type Query {
   challenges(offset: Int = 0, limit: Int = 10, filter: PageChallengeFilter): ChallengePager!
-  submissions: [Submission!]!
+  submissions(offset: Int = 0, limit: Int = 10, filter: PageSubmissionFilter): SubmissionPager!
 }
 
 input PageChallengeFilter {
   title: String
   description: String
+}
+
+input PageSubmissionFilter {
+  fromDate: DateTime
+  toDate: DateTime
+  challengeId: ID
+  status: SubmissionStatus
 }
 
 type Mutation {

@@ -20,10 +20,12 @@ export type CreateSubmissions = {
   status?: SubmissionStatus;
 };
 
-// repositoryUrl is not a sutable property for filtering
-export type FilterSubmissions = Partial<
-  Omit<SubmissionRequest, 'repositoryUrl'>
->;
+export type FilterSubmissions = {
+  fromDate?: Date;
+  toDate?: Date;
+  challengeId?: string;
+  status?: SubmissionStatus;
+};
 
 export type UpdateSubmissionRequest = {
   id: string;

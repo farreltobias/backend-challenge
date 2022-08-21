@@ -1,12 +1,12 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 
-import { URL } from '../../scalers/url.scaler';
+import { URL } from '../../scalars/url';
 
 @InputType()
 export class CreateSubmissionInput {
-  @Field((_type) => ID)
+  @Field(() => ID)
   challengeId: string;
 
-  @Field((_type) => URL)
+  @Field(() => URL)
   repositoryUrl: string;
 }
