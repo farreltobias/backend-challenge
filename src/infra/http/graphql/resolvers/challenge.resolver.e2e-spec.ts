@@ -4,6 +4,7 @@ import request from 'supertest';
 
 import { DatabaseModule } from '@infra/database/database.module';
 import { HttpModule } from '@infra/http/http.module';
+import { KafkaService } from '@infra/messaging/kafka.service';
 
 import {
   ChallengeFactory,
@@ -21,7 +22,14 @@ describe('Challenge Resolver (e2e)', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [DatabaseModule, HttpModule],
       providers: [ChallengeFactory],
-    }).compile();
+    })
+      .overrideProvider(KafkaService)
+      .useValue({
+        send: jest.fn(() => ({
+          subscribe: jest.fn(),
+        })),
+      })
+      .compile();
 
     app = moduleRef.createNestApplication();
 
@@ -39,12 +47,12 @@ describe('Challenge Resolver (e2e)', () => {
         query: `
           mutation {
             createChallenge(data: {
-              title: "${challenge.title}",
+              title: "${challenge.title}"
               description: "${challenge.description}"
             }) {
-              id,
-              title,
-              description,
+              id
+              title
+              description
               createdAt
             }
           }
@@ -76,13 +84,13 @@ describe('Challenge Resolver (e2e)', () => {
         query: `
           mutation {
             editChallenge(data: {
-              id: "${challenge.id}",
-              title: "${title}",
+              id: "${challenge.id}"
+              title: "${title}"
               description: "${description}"
             }) {
-              id,
-              title,
-              description,
+              id
+              title
+              description
               createdAt
             }
           }
@@ -111,9 +119,9 @@ describe('Challenge Resolver (e2e)', () => {
             removeChallenge(data: {
               id: "${challenge.id}"
             }) {
-              id,
-              title,
-              description,
+              id
+              title
+              description
               createdAt
             }
           }
@@ -154,18 +162,18 @@ describe('Challenge Resolver (e2e)', () => {
         query: `
           query {
             challenges(
-              offset: 0,
-              limit: 1,
+              offset: 0
+              limit: 1
               filter: {
                 title: "${challenge.title}",
                 description: "${challenge.description}"
               }
             ) {
               nodes {
-                id,
-                title,
-                description,
-                createdAt,
+                id
+                title
+                description
+                createdAt
               }
               totalCount
             }
