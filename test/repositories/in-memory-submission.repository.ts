@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Submission } from '@prisma/client';
+import { Challenge, Submission } from '@prisma/client';
 
 import { AsyncMaybe } from '@core/logic/Maybe';
 
@@ -14,11 +14,19 @@ import {
   CreateSubmissions,
 } from '@infra/database/repositories/submission.repository';
 
+import { InMemoryChallengeRepository } from './in-memory-challenge.repository';
+
+type Instance = Submission & {
+  challenge: Challenge | null;
+};
+
 @Injectable()
 export class InMemorySubmissionRepository implements SubmissionRepository {
-  private items: Submission[] = [];
+  private items: Instance[] = [];
 
-  private filterItemsByProps(props: FilterSubmissions): Submission[] {
+  constructor(private challengeRepository: InMemoryChallengeRepository) {}
+
+  private filterItemsByProps(props: FilterSubmissions): Instance[] {
     return this.items.filter((submission) => {
       return (
         submission.challengeId === props.challengeId &&
@@ -49,21 +57,24 @@ export class InMemorySubmissionRepository implements SubmissionRepository {
   }
 
   async getSubmissionById(id: string) {
-    const Submission = this.items.find((Submission) => Submission.id === id);
+    const submission = this.items.find((Submission) => Submission.id === id);
 
-    if (!Submission) return null;
+    if (!submission) return null;
 
-    return SubmissionMapper.toEntity(Submission);
+    return SubmissionMapper.toEntity(submission);
   }
 
   async createSubmission(
     submission: CreateSubmissions,
   ): Promise<SubmissionEntity> {
-    const entity = new SubmissionEntity({
+    const challenge = submission.challengeId
+      ? await this.challengeRepository.getChallengeById(submission.challengeId)
+      : null;
+
+    const entity = SubmissionEntity.create({
+      challenge,
       grade: 0,
       status: 'PENDING',
-      createdAt: new Date(),
-      updatedAt: new Date(),
       ...submission,
     });
 

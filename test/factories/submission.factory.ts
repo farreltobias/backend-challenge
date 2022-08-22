@@ -7,6 +7,8 @@ import { SubmissionMapper } from '@infra/database/prisma/mappers/submission.mapp
 import { PrismaService } from '@infra/database/prisma/prisma.service';
 import { SubmissionRequest } from '@infra/database/repositories/submission.repository';
 
+import { makeFakeChallenge } from './challenge.factory';
+
 type Overrides = Partial<SubmissionRequest>;
 
 export function makeFakeSubmission(data = {} as Overrides) {
@@ -15,8 +17,11 @@ export function makeFakeSubmission(data = {} as Overrides) {
 
   const repositoryUrl = `git@github.com:${userName}/${repoName}.git`;
 
+  const challenge = makeFakeChallenge();
+
   const props: SubmissionRequest = {
-    challengeId: data.challengeId ?? null,
+    challengeId: data.challenge?.id || challenge.id,
+    challenge: data.challenge || challenge,
     repositoryUrl: data.repositoryUrl || repositoryUrl,
     status: data.status || 'PENDING',
     grade: data.grade || 0,
@@ -34,8 +39,15 @@ export class SubmissionFactory {
   async makeSubmission(data = {} as Overrides): Promise<Submission> {
     const submission = makeFakeSubmission(data);
 
+    const props = SubmissionMapper.toInstance(submission);
+
     await this.prisma.submission.create({
-      data: SubmissionMapper.toInstance(submission),
+      data: {
+        challengeId: props.challengeId,
+        grade: props.grade,
+        status: props.status,
+        repositoryUrl: props.repositoryUrl,
+      },
     });
 
     return submission;

@@ -21,6 +21,7 @@ export class PrismaSubmissionRepository implements SubmissionRepository {
 
   async createSubmission(submission: CreateSubmissions): Promise<Submission> {
     const instance = await this.prisma.submission.create({
+      include: { challenge: true },
       data: submission,
     });
 
@@ -31,6 +32,7 @@ export class PrismaSubmissionRepository implements SubmissionRepository {
     submission: UpdateSubmissionRequest,
   ): Promise<Submission> {
     const instance = await this.prisma.submission.update({
+      include: { challenge: true },
       where: {
         id: submission.id,
       },
@@ -41,15 +43,16 @@ export class PrismaSubmissionRepository implements SubmissionRepository {
   }
 
   async getSubmissionById(id: string) {
-    const Submission = await this.prisma.submission.findUnique({
+    const submission = await this.prisma.submission.findUnique({
+      include: { challenge: true },
       where: {
         id,
       },
     });
 
-    if (!Submission) return null;
+    if (!submission) return null;
 
-    return SubmissionMapper.toEntity(Submission);
+    return SubmissionMapper.toEntity(submission);
   }
 
   async pageSubmissions({
@@ -58,6 +61,7 @@ export class PrismaSubmissionRepository implements SubmissionRepository {
     offset,
   }: PageSubmissions): AsyncMaybe<Submission[]> {
     const submissions = await this.prisma.submission.findMany({
+      include: { challenge: true },
       where: {
         challengeId: filter.challengeId,
         status: filter.status,

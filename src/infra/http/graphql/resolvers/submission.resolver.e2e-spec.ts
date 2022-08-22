@@ -12,6 +12,8 @@ import {
   makeFakeSubmission,
 } from '@test/factories/submission.factory';
 
+import { Submission } from '../dto/models/submission';
+import { ChallengeViewModel } from '../view-models/challenge.view-model';
 import { SubmissionViewModel } from '../view-models/submission.view-model';
 
 describe('Submission Resolver (e2e)', () => {
@@ -44,7 +46,7 @@ describe('Submission Resolver (e2e)', () => {
   it('(Mutation) CreateSubmission', async () => {
     const challenge = await challengeFactory.makeChallenge();
 
-    const submission = makeFakeSubmission({ challengeId: challenge.id });
+    const submission = makeFakeSubmission({ challenge });
 
     const response = await request(app.getHttpServer())
       .post('/graphql')
@@ -56,31 +58,42 @@ describe('Submission Resolver (e2e)', () => {
               repositoryUrl: "${submission.repositoryUrl}"
             }){
               id
-              challengeId
               repositoryUrl
               status
               grade
               createdAt
+              challenge {
+                id
+                title
+                description
+                createdAt
+              }
             }
           }
         `,
       })
       .expect(200);
 
-    const graphqlSubmission = {
-      ...SubmissionViewModel.toGraphql(submission),
+    const graphqlSubmission = SubmissionViewModel.toGraphql(submission);
+
+    expect(response.body.data.createSubmission).toEqual({
+      grade: graphqlSubmission.grade,
+      status: graphqlSubmission.status,
+      repositoryUrl: graphqlSubmission.repositoryUrl,
+      challenge: {
+        ...graphqlSubmission.challenge,
+        createdAt: expect.any(String),
+      },
       id: expect.any(String),
       createdAt: expect.any(String),
-    };
-
-    expect(response.body.data.createSubmission).toEqual(graphqlSubmission);
+    } as Submission);
   });
 
   it('(Query) SubmissionPager', async () => {
     const challenge = await challengeFactory.makeChallenge();
 
     const submission = await submissionFactory.makeSubmission({
-      challengeId: challenge.id,
+      challenge,
     });
 
     const response = await request(app.getHttpServer())
@@ -94,17 +107,20 @@ describe('Submission Resolver (e2e)', () => {
               filter: {
                 challengeId: "${submission.challengeId}"
                 status: ${submission.status}
-                fromDate: "${submission.createdAt.toISOString()}"
-                toDate: "${submission.createdAt.toISOString()}"
               }
             ) {
               nodes {
                 id
-                challengeId
                 repositoryUrl
                 status
                 grade
                 createdAt
+                challenge {
+                  id
+                  title
+                  description
+                  createdAt
+                }
               }
               totalCount
             }
@@ -115,11 +131,17 @@ describe('Submission Resolver (e2e)', () => {
 
     const graphqlSubmission = {
       ...SubmissionViewModel.toGraphql(submission),
-      createdAt: submission.createdAt.toISOString(),
+      challenge: {
+        ...ChallengeViewModel.toGraphql(challenge),
+        id: expect.any(String),
+        createdAt: expect.any(String),
+      },
+      id: expect.any(String),
+      createdAt: expect.any(String),
     };
 
-    expect(response.body.data.submissions.nodes).toEqual(
-      expect.arrayContaining([graphqlSubmission]),
+    expect(response.body.data.submissions.nodes?.[0]).toEqual(
+      graphqlSubmission,
     );
   });
 });

@@ -29,7 +29,7 @@ export type FilterSubmissions = {
 
 export type UpdateSubmissionRequest = {
   id: string;
-} & Partial<SubmissionRequest>;
+} & Partial<Omit<SubmissionRequest, 'challenge'>>;
 
 export type PageSubmissions = {
   filter: FilterSubmissions;

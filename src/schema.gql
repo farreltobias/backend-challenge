@@ -21,7 +21,7 @@ type ChallengePager {
 
 type Submission {
   id: ID!
-  challengeId: ID
+  challenge: Challenge
   repositoryUrl: URL!
   status: SubmissionStatus!
   grade: Float!

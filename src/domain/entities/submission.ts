@@ -2,10 +2,13 @@ import { Entity } from '@core/domain/Entity';
 
 import { SubmissionRequest } from '@infra/database/repositories/submission.repository';
 
+import { Challenge } from './challenge';
+
 export type SubmissionStatus = 'PENDING' | 'ERROR' | 'DONE';
 
 export interface SubmissionProps {
   challengeId: string | null;
+  challenge: Challenge | null;
   repositoryUrl: string;
   status: SubmissionStatus;
   grade: number;
@@ -18,6 +21,10 @@ export class Submission extends Entity<SubmissionProps> {
     const now = new Date();
 
     return new Submission({ ...props, createdAt: now, updatedAt: now });
+  }
+
+  get challenge() {
+    return this.props.challenge;
   }
 
   get challengeId() {

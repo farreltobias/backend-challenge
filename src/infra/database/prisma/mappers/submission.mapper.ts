@@ -1,16 +1,21 @@
-import { Submission } from '@prisma/client';
+import { Challenge, Submission } from '@prisma/client';
 
 import {
   Submission as SubmissionEntity,
   SubmissionProps,
 } from '@domain/entities/Submission';
 
+type Instance = Submission & {
+  challenge: Challenge | null;
+};
+
 export class SubmissionMapper {
-  static toEntity(instance: Submission): SubmissionEntity {
+  static toEntity(instance: Instance): SubmissionEntity {
     const { id } = instance;
 
     const props = {
       challengeId: instance.challengeId,
+      challenge: instance.challenge,
       repositoryUrl: instance.repositoryUrl,
       status: instance.status,
       grade: instance.grade,
@@ -21,10 +26,11 @@ export class SubmissionMapper {
     return new SubmissionEntity(props, id);
   }
 
-  static toInstance(entity: SubmissionEntity): Submission {
+  static toInstance(entity: SubmissionEntity): Instance {
     return {
       id: entity.id,
-      challengeId: entity.challengeId ?? null,
+      challenge: entity.challenge,
+      challengeId: entity.challengeId,
       repositoryUrl: entity.repositoryUrl,
       status: entity.status,
       grade: entity.grade,

@@ -24,8 +24,11 @@ describe('Page Submission UseCase', () => {
   };
 
   beforeEach(async () => {
-    const submissionRepository = new InMemorySubmissionRepository();
     const challengeRepository = new InMemoryChallengeRepository();
+
+    const submissionRepository = new InMemorySubmissionRepository(
+      challengeRepository,
+    );
 
     const moduleRef = await Test.createTestingModule({
       imports: [ConfigModule],
