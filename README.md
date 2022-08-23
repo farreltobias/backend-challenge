@@ -16,6 +16,7 @@ Bom desafio!
 ---
 
 - [🚀 Back end challenge](#-back-end-challenge)
+- [🤔 How To Use](#-how-to-use)
 - [🧠 Contexto](#-contexto)
     - [🚰 Fluxo esperado](#-fluxo-esperado)
     - [⚔️ Desafio](#️-desafio)
@@ -27,6 +28,33 @@ Bom desafio!
     - [Kafka](#kafka)
     - [GraphQL](#graphql)
     - [:notebook: To-do list](#notebook-to-do-list)
+
+# 🤔 How To Use
+
+To clone and run this application, you'll need [Git][git], [Node.js v16.16.0][nodejs] or higher and [Yarn v1.13][yarn] or higher installed on your computer. From your command line:
+
+```bash
+# Clone this repository
+$ git clone https://github.com/farreltobias/backend-challenge.git backend-challenge
+
+# Go into the repository
+$ cd backend-challenge
+
+# If you are using nvm, run the following to use the project's node version
+$ nvm use
+
+# Install dependencies
+$ yarn
+
+# Start nest server
+$ yarn start:dev
+
+# run unit tests
+$ yarn test
+
+# run e2e tests
+$ yarn test:e2e
+```
 
 # 🧠 Contexto
 
@@ -145,8 +173,8 @@ Mutation {
 - [x] Fazer o fork do projeto
 - [x] Configurar ambiente de desenvolvimento (inclusive executar o serviço de [corrections](packages/corrections))
 - [x] Criar uma [API GraphQL](https://docs.nestjs.com/graphql/quick-start) com o [contexto](#-contexto) acima utilizando Typescript
-- [ ] Fazer a integração com o serviço de [corrections](packages/corrections) através do Apache Kafka
-- [ ] Incluir no README as instruções de instalação do projeto
+- [x] Fazer a integração com o serviço de [corrections](packages/corrections) através do Apache Kafka
+- [x] Incluir no README as instruções de instalação do projeto
 
 :information_source: _Sinta-se livre para incluir quaisquer observações que achar necessário_
 
@@ -155,3 +183,7 @@ Mutation {
 _O desafio acima foi cuidadosamente construído para propósitos de avaliação apenas. Já possuimos uma funcionalidade similar na nossa plataforma._
 
 Made with 💜 at Rocketseat
+
+[git]: https://git-scm.com
+[nodejs]: https://nodejs.org/
+[yarn]: https://yarnpkg.com/
