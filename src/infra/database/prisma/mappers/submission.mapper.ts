@@ -1,4 +1,5 @@
 import { Challenge, Submission } from '@prisma/client';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
 import {
   Submission as SubmissionEntity,
@@ -6,7 +7,7 @@ import {
 } from '@domain/entities/Submission';
 
 type Instance = Submission & {
-  challenge: Challenge | null;
+  challenge: Maybe<Challenge>;
 };
 
 export class SubmissionMapper {
@@ -30,7 +31,7 @@ export class SubmissionMapper {
     return {
       id: entity.id,
       challenge: entity.challenge,
-      challengeId: entity.challengeId,
+      challengeId: entity.challengeId ?? null,
       repositoryUrl: entity.repositoryUrl,
       status: entity.status,
       grade: entity.grade,

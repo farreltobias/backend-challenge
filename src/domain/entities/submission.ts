@@ -1,3 +1,5 @@
+import { Maybe } from 'graphql/jsutils/Maybe';
+
 import { Entity } from '@core/domain/Entity';
 
 import { SubmissionRequest } from '@infra/database/repositories/submission.repository';
@@ -7,8 +9,8 @@ import { Challenge } from './challenge';
 export type SubmissionStatus = 'PENDING' | 'ERROR' | 'DONE';
 
 export interface SubmissionProps {
-  challengeId: string | null;
-  challenge: Challenge | null;
+  challengeId: Maybe<string>;
+  challenge: Maybe<Challenge>;
   repositoryUrl: string;
   status: SubmissionStatus;
   grade: number;

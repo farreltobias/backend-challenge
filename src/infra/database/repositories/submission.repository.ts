@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { AsyncMaybe } from '@core/logic/Maybe';
 
@@ -15,7 +16,7 @@ export type SubmissionRequest = Omit<
 >;
 
 export type CreateSubmissions = {
-  challengeId: string | null;
+  challengeId: Maybe<string>;
   repositoryUrl: string;
   status?: SubmissionStatus;
 };

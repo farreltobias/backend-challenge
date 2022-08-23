@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Challenge, Submission } from '@prisma/client';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { AsyncMaybe } from '@core/logic/Maybe';
 
 import { Submission as SubmissionEntity } from '@domain/entities/submission';
 
 import { SubmissionMapper } from '@infra/database/prisma/mappers/submission.mapper';
+import { ChallengeRepository } from '@infra/database/repositories/challenge.repository';
 import {
   SubmissionRepository,
   FilterSubmissions,
@@ -14,23 +16,23 @@ import {
   CreateSubmissions,
 } from '@infra/database/repositories/submission.repository';
 
-import { InMemoryChallengeRepository } from './in-memory-challenge.repository';
-
 type Instance = Submission & {
-  challenge: Challenge | null;
+  challenge: Maybe<Challenge>;
 };
 
 @Injectable()
 export class InMemorySubmissionRepository implements SubmissionRepository {
   private items: Instance[] = [];
 
-  constructor(private challengeRepository: InMemoryChallengeRepository) {}
+  constructor(private challengeRepository: ChallengeRepository) {}
 
   private filterItemsByProps(props: FilterSubmissions): Instance[] {
     return this.items.filter((submission) => {
       return (
-        submission.challengeId === props.challengeId &&
-        submission.status === props.status &&
+        (props.challengeId
+          ? submission.challengeId === props.challengeId
+          : true) &&
+        (props.status ? submission.status === props.status : true) &&
         (props.fromDate ? submission.createdAt >= props.fromDate : true) &&
         (props.toDate ? submission.createdAt <= props.toDate : true)
       );

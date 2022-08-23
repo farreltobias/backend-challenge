@@ -1,4 +1,8 @@
+import { Test } from '@nestjs/testing';
+
 import { Challenge } from '@domain/entities/challenge';
+
+import { ChallengeRepository } from '@infra/database/repositories/challenge.repository';
 
 import { InMemoryChallengeRepository } from '@test/repositories/in-memory-challenge.repository';
 
@@ -9,10 +13,20 @@ describe('Page Challenge UseCase', () => {
   let createChallengeUseCase: CreateChallengeUseCase;
   let pageChallengesUseCase: PageChallengesUseCase;
 
-  beforeEach(() => {
-    const challengeRepository = new InMemoryChallengeRepository();
-    createChallengeUseCase = new CreateChallengeUseCase(challengeRepository);
-    pageChallengesUseCase = new PageChallengesUseCase(challengeRepository);
+  beforeEach(async () => {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        {
+          provide: ChallengeRepository,
+          useClass: InMemoryChallengeRepository,
+        },
+        CreateChallengeUseCase,
+        PageChallengesUseCase,
+      ],
+    }).compile();
+
+    createChallengeUseCase = moduleRef.get(CreateChallengeUseCase);
+    pageChallengesUseCase = moduleRef.get(PageChallengesUseCase);
   });
 
   it('should be able to page Challenges', async () => {

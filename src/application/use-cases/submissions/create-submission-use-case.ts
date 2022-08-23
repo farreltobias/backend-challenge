@@ -8,12 +8,12 @@ import { ChallengeRepository } from '@infra/database/repositories/challenge.repo
 import { SubmissionRepository } from '@infra/database/repositories/submission.repository';
 import { KafkaService } from '@infra/messaging/kafka.service';
 
-interface CorrectLessonMessage {
+export interface CorrectLessonMessage {
   submissionId: string;
   repositoryUrl: string;
 }
 
-interface CorrectLessonResponse {
+export interface CorrectLessonResponse {
   submissionId: string;
   repositoryUrl: string;
   grade: number;

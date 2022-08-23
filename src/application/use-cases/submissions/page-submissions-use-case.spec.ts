@@ -1,10 +1,12 @@
-import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 
 import { Submission } from '@domain/entities/submission';
 
+import { ChallengeRepository } from '@infra/database/repositories/challenge.repository';
+import { SubmissionRepository } from '@infra/database/repositories/submission.repository';
 import { KafkaService } from '@infra/messaging/kafka.service';
 
+import { InMemoryKafkaService } from '@test/messaging/in-memory-kafka.service';
 import { InMemoryChallengeRepository } from '@test/repositories/in-memory-challenge.repository';
 import { InMemorySubmissionRepository } from '@test/repositories/in-memory-submission.repository';
 
@@ -17,40 +19,30 @@ describe('Page Submission UseCase', () => {
   let createSubmissionUseCase: CreateSubmissionUseCase;
   let pageSubmissionsUseCase: PageSubmissionsUseCase;
 
-  const kafkaEmit = {
-    send: jest.fn(() => ({
-      subscribe: jest.fn(),
-    })),
-  };
-
   beforeEach(async () => {
-    const challengeRepository = new InMemoryChallengeRepository();
-
-    const submissionRepository = new InMemorySubmissionRepository(
-      challengeRepository,
-    );
-
     const moduleRef = await Test.createTestingModule({
-      imports: [ConfigModule],
       providers: [
         {
-          provide: KafkaService,
-          useValue: kafkaEmit,
+          provide: ChallengeRepository,
+          useClass: InMemoryChallengeRepository,
         },
+        {
+          provide: SubmissionRepository,
+          useClass: InMemorySubmissionRepository,
+        },
+        {
+          provide: KafkaService,
+          useClass: InMemoryKafkaService,
+        },
+        CreateChallengeUseCase,
+        CreateSubmissionUseCase,
+        PageSubmissionsUseCase,
       ],
     }).compile();
 
-    const kafkaService = await moduleRef.resolve(KafkaService);
-
-    createChallengeUseCase = new CreateChallengeUseCase(challengeRepository);
-
-    createSubmissionUseCase = new CreateSubmissionUseCase(
-      challengeRepository,
-      submissionRepository,
-      kafkaService,
-    );
-
-    pageSubmissionsUseCase = new PageSubmissionsUseCase(submissionRepository);
+    createChallengeUseCase = moduleRef.get(CreateChallengeUseCase);
+    createSubmissionUseCase = moduleRef.get(CreateSubmissionUseCase);
+    pageSubmissionsUseCase = moduleRef.get(PageSubmissionsUseCase);
   });
 
   it('should be able to page Submissions', async () => {
@@ -67,9 +59,7 @@ describe('Page Submission UseCase', () => {
     const response = await pageSubmissionsUseCase.handle({
       filter: {
         challengeId: challenge.id,
-        status: 'PENDING',
-        fromDate: submission.createdAt,
-        toDate: submission.createdAt,
+        status: 'DONE',
       },
       limit: 1,
       offset: 0,
@@ -79,7 +69,12 @@ describe('Page Submission UseCase', () => {
     expect(response.nodes?.[0]).toBeInstanceOf(Submission);
 
     expect(response.totalCount).toBe(1);
-    expect(response.nodes).toEqual<Submission[]>([submission]);
+    expect(response.nodes?.[0].props).toEqual({
+      ...submission.props,
+      status: 'DONE',
+      grade: expect.any(Number),
+      updatedAt: expect.any(Date),
+    });
   });
 
   it('should be able to filter Submissions in pager', async () => {
@@ -106,7 +101,7 @@ describe('Page Submission UseCase', () => {
     const response = await pageSubmissionsUseCase.handle({
       filter: {
         challengeId: challenge.id,
-        status: 'PENDING',
+        status: 'DONE',
         fromDate: submission.createdAt,
         toDate: submissionNotIncluded.createdAt,
       },
@@ -117,12 +112,22 @@ describe('Page Submission UseCase', () => {
     expect(response.nodes).not.toBeNull();
 
     expect(response.totalCount).toBe(1);
-    expect(response.nodes).toEqual<Submission[]>(
-      expect.arrayContaining([submission]),
-    );
+    expect(response.nodes?.[0].props).toEqual({
+      ...submission.props,
+      status: 'DONE',
+      grade: expect.any(Number),
+      updatedAt: expect.any(Date),
+    });
 
     expect(response.nodes).not.toEqual<Submission[]>(
-      expect.arrayContaining([submissionNotIncluded]),
+      expect.arrayContaining([
+        {
+          ...submissionNotIncluded,
+          status: 'DONE',
+          grade: expect.any(Number),
+          updatedAt: expect.any(Date),
+        },
+      ]),
     );
   });
 });

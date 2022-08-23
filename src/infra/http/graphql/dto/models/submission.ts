@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Max, Min } from 'class-validator';
+import { Maybe } from 'graphql/jsutils/Maybe';
 
 import { SubmissionStatus } from '../enum/submission-status';
 import { URL } from '../scalars/url';
@@ -11,7 +12,7 @@ export class Submission {
   id: string;
 
   @Field((_type) => Challenge, { nullable: true })
-  challenge: Challenge | null;
+  challenge: Maybe<Challenge>;
 
   challengeId?: string;
 

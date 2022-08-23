@@ -1,4 +1,10 @@
+import { Test } from '@nestjs/testing';
+
+import { UseCaseError } from '@application/errors/use-case-error';
+
 import { Challenge } from '@domain/entities/challenge';
+
+import { ChallengeRepository } from '@infra/database/repositories/challenge.repository';
 
 import { InMemoryChallengeRepository } from '@test/repositories/in-memory-challenge.repository';
 
@@ -11,11 +17,22 @@ describe('Remove Challenge UseCase', () => {
   let removeChallengeUseCase: RemoveChallengeUseCase;
   let pageChallengesUseCase: PageChallengesUseCase;
 
-  beforeEach(() => {
-    const challengeRepository = new InMemoryChallengeRepository();
-    createChallengeUseCase = new CreateChallengeUseCase(challengeRepository);
-    removeChallengeUseCase = new RemoveChallengeUseCase(challengeRepository);
-    pageChallengesUseCase = new PageChallengesUseCase(challengeRepository);
+  beforeEach(async () => {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        {
+          provide: ChallengeRepository,
+          useClass: InMemoryChallengeRepository,
+        },
+        CreateChallengeUseCase,
+        RemoveChallengeUseCase,
+        PageChallengesUseCase,
+      ],
+    }).compile();
+
+    createChallengeUseCase = moduleRef.get(CreateChallengeUseCase);
+    removeChallengeUseCase = moduleRef.get(RemoveChallengeUseCase);
+    pageChallengesUseCase = moduleRef.get(PageChallengesUseCase);
   });
 
   it('should be able to remove Challenges', async () => {
@@ -38,6 +55,16 @@ describe('Remove Challenge UseCase', () => {
 
     expect(response.nodes).not.toEqual<Challenge[]>(
       expect.arrayContaining([challenge]),
+    );
+  });
+
+  it('should not be able to edit a Challenge with an invalid id', async () => {
+    const response = removeChallengeUseCase.handle({
+      id: 'invalid-id',
+    });
+
+    await expect(response).rejects.toThrow(
+      new Error('Challenge not found') as UseCaseError,
     );
   });
 });

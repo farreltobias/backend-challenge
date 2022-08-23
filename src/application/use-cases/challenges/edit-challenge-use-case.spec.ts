@@ -1,4 +1,10 @@
+import { Test } from '@nestjs/testing';
+
+import { UseCaseError } from '@application/errors/use-case-error';
+
 import { Challenge } from '@domain/entities/challenge';
+
+import { ChallengeRepository } from '@infra/database/repositories/challenge.repository';
 
 import { InMemoryChallengeRepository } from '@test/repositories/in-memory-challenge.repository';
 
@@ -9,10 +15,20 @@ describe('Edit Challenge UseCase', () => {
   let createChallengeUseCase: CreateChallengeUseCase;
   let editChallengeUseCase: EditChallengeUseCase;
 
-  beforeEach(() => {
-    const challengeRepository = new InMemoryChallengeRepository();
-    createChallengeUseCase = new CreateChallengeUseCase(challengeRepository);
-    editChallengeUseCase = new EditChallengeUseCase(challengeRepository);
+  beforeEach(async () => {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        {
+          provide: ChallengeRepository,
+          useClass: InMemoryChallengeRepository,
+        },
+        CreateChallengeUseCase,
+        EditChallengeUseCase,
+      ],
+    }).compile();
+
+    createChallengeUseCase = moduleRef.get(CreateChallengeUseCase);
+    editChallengeUseCase = moduleRef.get(EditChallengeUseCase);
   });
 
   it('should be able to edit a Challenge', async () => {
@@ -32,5 +48,17 @@ describe('Edit Challenge UseCase', () => {
 
     expect(response.title).toBe('New Title');
     expect(response.description).toBe('New Description');
+  });
+
+  it('should not be able to edit a Challenge with an invalid id', async () => {
+    const response = editChallengeUseCase.handle({
+      id: 'invalid-id',
+      title: 'New Title',
+      description: 'New Description',
+    });
+
+    await expect(response).rejects.toThrow(
+      new Error('Challenge not found') as UseCaseError,
+    );
   });
 });

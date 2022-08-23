@@ -12,6 +12,7 @@ import {
   makeFakeSubmission,
 } from '@test/factories/submission.factory';
 
+import { Challenge } from '../dto/models/challenge';
 import { Submission } from '../dto/models/submission';
 import { ChallengeViewModel } from '../view-models/challenge.view-model';
 import { SubmissionViewModel } from '../view-models/submission.view-model';
@@ -76,17 +77,17 @@ describe('Submission Resolver (e2e)', () => {
 
     const graphqlSubmission = SubmissionViewModel.toGraphql(submission);
 
-    expect(response.body.data.createSubmission).toEqual({
+    expect(response.body.data.createSubmission).toEqual<Submission>({
       grade: graphqlSubmission.grade,
       status: graphqlSubmission.status,
       repositoryUrl: graphqlSubmission.repositoryUrl,
       challenge: {
         ...graphqlSubmission.challenge,
         createdAt: expect.any(String),
-      },
+      } as Challenge,
       id: expect.any(String),
       createdAt: expect.any(String),
-    } as Submission);
+    });
   });
 
   it('(Query) SubmissionPager', async () => {
