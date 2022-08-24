@@ -1,6 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { UseCaseError } from '@application/errors/use-case-error';
 import { CreateSubmissionUseCase } from '@application/use-cases/submissions/create-submission-use-case';
 import { PageSubmissionsUseCase } from '@application/use-cases/submissions/page-submissions-use-case';
 
@@ -9,7 +8,6 @@ import { PageSubmissionInput } from '../dto/input/submission/page-submission-inp
 import { Submission } from '../dto/models/submission';
 import { SubmissionPager } from '../dto/output/submission/page-submissions-output';
 import { SubmissionViewModel } from '../view-models/submission.view-model';
-import { UseCaseErrorViewModel } from '../view-models/use-case-error.view-model';
 
 @Resolver(() => String)
 export class SubmissionResolver {
@@ -20,13 +18,7 @@ export class SubmissionResolver {
 
   @Mutation((_returns) => Submission)
   async createSubmission(@Args('data') data: CreateSubmissionInput) {
-    try {
-      return this.createSubmissionUseCase.handle(data);
-    } catch (error) {
-      if (error instanceof UseCaseError) {
-        throw UseCaseErrorViewModel.toGraphQL(error);
-      }
-    }
+    return this.createSubmissionUseCase.handle(data);
   }
 
   @Query((_returns) => SubmissionPager)
