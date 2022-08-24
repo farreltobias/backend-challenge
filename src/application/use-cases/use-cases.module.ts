@@ -5,7 +5,6 @@ import { SubmissionsUseCasesModule } from './submissions-use-cases.module';
 
 @Module({
   imports: [ChallengesUseCasesModule, SubmissionsUseCasesModule],
-  providers: [ChallengesUseCasesModule, SubmissionsUseCasesModule],
   exports: [ChallengesUseCasesModule, SubmissionsUseCasesModule],
 })
 export class UseCasesModule {}
